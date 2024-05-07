@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   app:
     build:
@@ -14,6 +12,7 @@ services:
       - .env
     ports:
       - ${PORT}:${PORT}
+      - 9229:9229
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
