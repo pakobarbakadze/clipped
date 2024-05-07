@@ -1,6 +1,8 @@
 import {
+  Body,
   Controller,
   FileTypeValidator,
+  Get,
   MaxFileSizeValidator,
   ParseFilePipe,
   Post,
@@ -29,5 +31,10 @@ export class VideoController {
   ) {
     await this.videoService.uploadVideo(video.buffer, video.originalname);
     return { message: 'Video uploaded successfully' };
+  }
+
+  @Get('download')
+  async downloadVideo(@Body('fileName') fileName: string) {
+    return this.videoService.downloadVideo(fileName);
   }
 }

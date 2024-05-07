@@ -1,12 +1,16 @@
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { LoggerService } from 'src/shared/logger/logger.service';
 
 @Injectable()
 export class S3Service {
   private readonly s3Client: S3Client;
 
-  constructor(private readonly configService: ConfigService) {
+  constructor(
+    private readonly configService: ConfigService,
+    private readonly logger: LoggerService,
+  ) {
     this.s3Client = new S3Client({
       region: this.configService.get('AWS_REGION'),
       credentials: {
@@ -26,7 +30,7 @@ export class S3Service {
         }),
       );
     } catch (error) {
-      console.error('Error uploading file to S3: ', error);
+      this.logger.error(error);
     }
   }
 }
