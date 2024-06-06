@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { LoggerService } from 'src/shared/logger/logger.service';
-import { S3Service } from '../aws/s3/s3.service';
+import { S3Service } from '../../shared/aws/s3/s3.service';
 
 @Injectable()
 export class VideoService {

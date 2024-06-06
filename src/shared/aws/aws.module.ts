@@ -1,10 +1,9 @@
 import { Module } from '@nestjs/common';
-import { SharedModule } from 'src/shared/shared.module';
+import { LoggerModule } from '../logger/logger.module';
 import { S3Service } from './s3/s3.service';
 
 @Module({
-  imports: [SharedModule],
-  controllers: [],
+  imports: [LoggerModule],
   providers: [S3Service],
   exports: [S3Service],
 })
