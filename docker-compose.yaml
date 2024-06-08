@@ -5,7 +5,7 @@ services:
       dockerfile: Dockerfile
       target: ${NODE_ENV}
     container_name: app
-    command: pnpm run start:debug
+    command: npm run start:debug
     depends_on:
       - db
     env_file:
