@@ -7,6 +7,8 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
+import { plainToClass } from 'class-transformer';
+import { UserDto } from 'src/common/dto/user.dto';
 import { Role } from 'src/common/types/enum/role.enum';
 import { AuthorizedRequest } from 'src/common/types/interface/request.interface';
 import { Roles } from '../auth/decorator/roles.decorator';
@@ -26,8 +28,9 @@ export class UserController {
   ) {}
 
   @Get(':username')
-  findOne(@Param('username') username: string) {
-    return this.userService.findOne({ where: { username } });
+  async findOne(@Param('username') username: string): Promise<UserDto> {
+    const user = await this.userService.findOne({ where: { username } });
+    return plainToClass(UserDto, user, { excludeExtraneousValues: true });
   }
 
   @Patch('/role')

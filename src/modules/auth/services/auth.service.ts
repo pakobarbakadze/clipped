@@ -38,7 +38,7 @@ export class AuthService {
   }
 
   public async signUp(signUpDto: SignUpDto): Promise<User> {
-    const { username, password, companyName } = signUpDto;
+    const { username, password } = signUpDto;
 
     const createdUser = await this.userService.create({
       username,

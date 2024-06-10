@@ -21,14 +21,12 @@ export class UserService {
       password,
     });
 
-    const savedUser = await this.userRepository.save(user);
-
-    return this.sanitizeUser(savedUser);
+    return this.userRepository.save(user);
   }
 
+  // TODO: change this method to not use repository conditions
   public async findOne(conditions: FindOneOptions<User>): Promise<User> {
-    const user = await this.userRepository.findOne(conditions);
-    return this.sanitizeUser(user);
+    return this.userRepository.findOne(conditions);
   }
 
   public async update(
@@ -48,25 +46,18 @@ export class UserService {
 
     user.role = role;
 
-    const savedUser = await this.userRepository.save(user);
-
-    return this.sanitizeUser(savedUser);
+    return this.userRepository.save(user);
   }
 
-  public async validateUser(username: string, password: string) {
+  public async validateUser(username: string, password: string): Promise<User> {
     const user = await this.userRepository.findOne({ where: { username } });
 
     if (!user) throw new UnauthorizedException('Invalid username or password');
 
     if (await user.validatePassword(password)) {
-      return this.sanitizeUser(user);
+      return user;
     }
 
     return null;
-  }
-
-  private sanitizeUser(user: User): User {
-    delete user.password;
-    return user;
   }
 }

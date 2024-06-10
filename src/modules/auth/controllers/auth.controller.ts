@@ -10,6 +10,8 @@ import {
   UseGuards,
   UsePipes,
 } from '@nestjs/common';
+import { plainToClass } from 'class-transformer';
+import { UserDto } from 'src/common/dto/user.dto';
 import { User } from '../../user/entities/user.entity';
 import { CurrentUser } from '../decorator/current-user.decorator';
 import { RefreshTokenDto } from '../dto/refresh-token.dto';
@@ -27,8 +29,9 @@ export class AuthController {
 
   @Post('sign-up')
   @UsePipes(new SignUpValidatorPipe())
-  signUp(@Body() signUpDto: SignUpDto) {
-    return this.authService.signUp(signUpDto);
+  async signUp(@Body() signUpDto: SignUpDto): Promise<UserDto> {
+    const user = await this.authService.signUp(signUpDto);
+    return plainToClass(UserDto, user, { excludeExtraneousValues: true });
   }
 
   @Post('sign-in')
