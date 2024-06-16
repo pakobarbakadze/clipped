@@ -1,3 +1,3 @@
-export class VerifyTwoFactorAuthDto {
+export default class VerifyTwoFactorAuthDto {
   token: string;
 }

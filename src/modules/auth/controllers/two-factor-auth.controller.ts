@@ -8,8 +8,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthorizedRequest } from 'src/common/types/interface/request.interface';
-import { VerifyTwoFactorAuthDto } from '../dto/verify-2fa.dto';
-import { JwtAuthGuard } from '../guard/jwt-auth.guard';
+import { VerifyTwoFactorAuthDto } from '../dto';
+import { JwtAuthGuard } from '../guard';
 import { TwoFactorAuthService } from '../services/two-factor-auth.service';
 
 @Controller('2fa')

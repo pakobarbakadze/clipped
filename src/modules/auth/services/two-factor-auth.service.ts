@@ -3,7 +3,7 @@ import * as qrcode from 'qrcode';
 import * as speakeasy from 'speakeasy';
 import { UserService } from 'src/modules/user/services/user.service';
 import { User } from '../../user/entities/user.entity';
-import { VerifyTwoFactorAuthDto } from '../dto/verify-2fa.dto';
+import { VerifyTwoFactorAuthDto } from '../dto';
 
 export class TwoFactorAuthService {
   constructor(private readonly userService: UserService) {}

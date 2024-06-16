@@ -14,15 +14,11 @@ import { plainToClass } from 'class-transformer';
 import { UserDto } from 'src/common/dto/user.dto';
 import { User } from '../../user/entities/user.entity';
 import { CurrentUser } from '../decorator/current-user.decorator';
-import { RefreshTokenDto } from '../dto/refresh-token.dto';
-import SignInDto from '../dto/sign-in.dto';
+import { RefreshTokenDto, SignInDto, SignUpDto } from '../dto';
 import signOutDto from '../dto/sign-out.dto';
-import { SignUpDto } from '../dto/sign-up.dto';
-import { JwtAuthGuard } from '../guard/jwt-auth.guard';
-import { JwtRefreshTokenGuard } from '../guard/jwt-refresh.guard';
-import { LocalAuthGuard } from '../guard/local-auth.guard';
+import { JwtAuthGuard, JwtRefreshTokenGuard, LocalAuthGuard } from '../guard';
 import { AuthService } from '../services/auth.service';
-import { SignUpValidatorPipe } from '../validation/sign-up.pipe';
+import { SignInValidationPipe, SignUpValidatorPipe } from '../validation';
 
 @Controller('auth')
 export class AuthController {
@@ -38,6 +34,7 @@ export class AuthController {
   @Post('sign-in')
   @UseGuards(LocalAuthGuard)
   @HttpCode(HttpStatus.OK)
+  @UsePipes(new SignInValidationPipe())
   signIn(@CurrentUser() user: User, @Body() body: SignInDto) {
     return this.authService.signIn(user, body.deviceId);
   }

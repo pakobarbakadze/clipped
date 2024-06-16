@@ -3,4 +3,4 @@ import { AuthGuard } from '@nestjs/passport';
 import { AuthStrategy } from '../types/enum/strategy.enum';
 
 @Injectable()
-export class LocalAuthGuard extends AuthGuard(AuthStrategy.LOCAL) {}
+export default class LocalAuthGuard extends AuthGuard(AuthStrategy.LOCAL) {}

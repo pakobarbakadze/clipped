@@ -1,6 +1,6 @@
 import * as Joi from 'joi';
 
-export class SignUpDto {
+export default class SignUpDto {
   username: string;
   password: string;
 }

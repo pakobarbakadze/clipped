@@ -1,3 +1,3 @@
-export class RefreshTokenDto {
+export default class RefreshTokenDto {
   deviceId?: string;
 }

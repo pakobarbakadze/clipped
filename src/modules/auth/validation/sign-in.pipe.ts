@@ -1,9 +1,9 @@
 import { BadRequestException, PipeTransform } from '@nestjs/common';
-import SignUpDto, { signUpSchema } from '../dto/sign-up.dto';
+import SignInDto, { signInSchema } from '../dto/sign-in.dto';
 
-export default class SignUpValidatorPipe implements PipeTransform<SignUpDto> {
-  public transform(value: SignUpDto): SignUpDto {
-    const result = signUpSchema.validate(value);
+export default class SignInValidationPipe implements PipeTransform<SignInDto> {
+  public transform(value: SignInDto): SignInDto {
+    const result = signInSchema.validate(value);
     if (result.error) {
       const errorMessages = result.error.details.map((d) => d.message).join();
       throw new BadRequestException(errorMessages);
