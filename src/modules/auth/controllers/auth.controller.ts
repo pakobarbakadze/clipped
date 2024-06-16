@@ -16,6 +16,7 @@ import { User } from '../../user/entities/user.entity';
 import { CurrentUser } from '../decorator/current-user.decorator';
 import { RefreshTokenDto } from '../dto/refresh-token.dto';
 import SignInDto from '../dto/sign-in.dto';
+import signOutDto from '../dto/sign-out.dto';
 import { SignUpDto } from '../dto/sign-up.dto';
 import { JwtAuthGuard } from '../guard/jwt-auth.guard';
 import { JwtRefreshTokenGuard } from '../guard/jwt-refresh.guard';
@@ -43,14 +44,17 @@ export class AuthController {
 
   @Post('sign-out')
   @UseGuards(JwtAuthGuard)
-  invalidateToken(@Headers('authorization') authorization: string) {
-    return this.authService.invalidateToken(authorization);
+  invalidateToken(
+    @Headers('authorization') authorization: string,
+    @Body() body: signOutDto,
+  ) {
+    return this.authService.invalidateToken(authorization, body.deviceId);
   }
 
   @Get('profile')
   @UseGuards(JwtAuthGuard)
   getProfile(@Request() req: any) {
-    return req.user;
+    return plainToClass(UserDto, req.user, { excludeExtraneousValues: true });
   }
 
   @Post('refresh-token')

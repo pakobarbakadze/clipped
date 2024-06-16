@@ -16,11 +16,19 @@ export class RefreshTokenService {
   ): Promise<void> {
     const { user, deviceId, token } = insertRefreshTokenDto;
 
-    const refreshToken = this.refreshTokenRepository.create({
-      user,
-      deviceId,
-      refreshToken: token,
+    let refreshToken = await this.refreshTokenRepository.findOne({
+      where: { deviceId },
     });
+
+    if (!refreshToken) {
+      refreshToken = this.refreshTokenRepository.create({
+        user,
+        deviceId,
+        refreshToken: token,
+      });
+    } else {
+      refreshToken.refreshToken = token;
+    }
 
     await this.refreshTokenRepository.save(refreshToken);
   }
@@ -35,7 +43,10 @@ export class RefreshTokenService {
     return true;
   }
 
-  public async invalidate(userId: string): Promise<void> {
-    await this.refreshTokenRepository.delete({ user: { id: userId } });
+  public async invalidate(userId: string, deviceId: string): Promise<void> {
+    await this.refreshTokenRepository.delete({
+      user: { id: userId },
+      deviceId,
+    });
   }
 }

@@ -5,9 +5,6 @@ export class UserDto {
   username: string;
 
   @Expose()
-  password: string;
-
-  @Expose()
   role: string;
 
   constructor(partial: Partial<UserDto>) {
