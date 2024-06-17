@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { InsertRefreshTokenDto } from '../dto';
@@ -14,39 +14,51 @@ export class RefreshTokenService {
   public async insert(
     insertRefreshTokenDto: InsertRefreshTokenDto,
   ): Promise<void> {
-    const { user, deviceId, token } = insertRefreshTokenDto;
+    try {
+      const { user, deviceId, token } = insertRefreshTokenDto;
 
-    let refreshToken = await this.refreshTokenRepository.findOne({
-      where: { deviceId },
-    });
-
-    if (!refreshToken) {
-      refreshToken = this.refreshTokenRepository.create({
-        user,
-        deviceId,
-        refreshToken: token,
+      let refreshToken = await this.refreshTokenRepository.findOne({
+        where: { deviceId },
       });
-    } else {
-      refreshToken.refreshToken = token;
-    }
 
-    await this.refreshTokenRepository.save(refreshToken);
+      if (!refreshToken) {
+        refreshToken = this.refreshTokenRepository.create({
+          user,
+          deviceId,
+          refreshToken: token,
+        });
+      } else {
+        refreshToken.refreshToken = token;
+      }
+
+      await this.refreshTokenRepository.save(refreshToken);
+    } catch (error) {
+      throw new HttpException('Error while inserting Refresh Token', 500);
+    }
   }
 
   public async validate(userId: string, deviceId: string): Promise<boolean> {
-    const refreshToken = await this.refreshTokenRepository.findOne({
-      where: { user: { id: userId }, deviceId },
-    });
-    if (!refreshToken) {
-      throw new Error('Invalidated Refresh Token');
+    try {
+      const refreshToken = await this.refreshTokenRepository.findOne({
+        where: { user: { id: userId }, deviceId },
+      });
+      if (!refreshToken) {
+        throw new Error('Invalidated Refresh Token');
+      }
+      return true;
+    } catch (error) {
+      throw new HttpException('Error while validating Refresh Token', 500);
     }
-    return true;
   }
 
   public async invalidate(userId: string, deviceId: string): Promise<void> {
-    await this.refreshTokenRepository.delete({
-      user: { id: userId },
-      deviceId,
-    });
+    try {
+      await this.refreshTokenRepository.delete({
+        user: { id: userId },
+        deviceId,
+      });
+    } catch (error) {
+      throw new HttpException('Error while invalidating Refresh Token', 500);
+    }
   }
 }

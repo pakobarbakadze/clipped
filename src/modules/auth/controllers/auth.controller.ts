@@ -33,8 +33,8 @@ export class AuthController {
 
   @Post('sign-in')
   @UseGuards(LocalAuthGuard)
-  @HttpCode(HttpStatus.OK)
   @UsePipes(new SignInValidationPipe())
+  @HttpCode(HttpStatus.OK)
   signIn(@CurrentUser() user: User, @Body() body: SignInDto) {
     return this.authService.signIn(user, body.deviceId);
   }
