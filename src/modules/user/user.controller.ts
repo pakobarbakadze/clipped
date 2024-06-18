@@ -7,6 +7,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 import { UserDto } from 'src/common/dto/user.dto';
 import { Role } from 'src/common/types/enum/role.enum';
@@ -19,6 +20,7 @@ import { ChangeUserPasswordDto } from './dto/change-user-password.dto';
 import { UserPasswordService } from './services/user-password.service';
 import { UserService } from './services/user.service';
 
+@ApiTags('user')
 @Controller('user')
 export class UserController {
   constructor(

@@ -7,11 +7,13 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { AuthorizedRequest } from 'src/common/types/interface/request.interface';
 import { VerifyTwoFactorAuthDto } from '../dto';
 import { JwtAuthGuard } from '../guard';
 import { TwoFactorAuthService } from '../services/two-factor-auth.service';
 
+@ApiTags('2fa')
 @Controller('2fa')
 export class TwoFactorAuthController {
   constructor(private readonly twoFactorAuthService: TwoFactorAuthService) {}

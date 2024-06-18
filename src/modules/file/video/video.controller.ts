@@ -10,8 +10,10 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiTags } from '@nestjs/swagger';
 import { VideoService } from './video.service';
 
+@ApiTags('video')
 @Controller('video')
 export class VideoController {
   constructor(private readonly videoService: VideoService) {}

@@ -10,6 +10,7 @@ import {
   UseGuards,
   UsePipes,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
 import { UserDto } from 'src/common/dto/user.dto';
 import { User } from '../../user/entities/user.entity';
@@ -20,6 +21,7 @@ import { JwtAuthGuard, JwtRefreshTokenGuard, LocalAuthGuard } from '../guard';
 import { AuthService } from '../services/auth.service';
 import { SignInValidationPipe, SignUpValidatorPipe } from '../validation';
 
+@ApiTags('auth')
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
