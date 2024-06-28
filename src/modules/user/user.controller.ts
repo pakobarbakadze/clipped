@@ -9,16 +9,15 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { plainToClass } from 'class-transformer';
-import { UserDto } from 'src/common/dto/user.dto';
-import { Role } from 'src/common/types/enum/role.enum';
-import { AuthorizedRequest } from 'src/common/types/interface/request.interface';
+import { UserDto } from '../../common/dto/user.dto';
+import { Role } from '../../common/types/enum/role.enum';
+import { AuthorizedRequest } from '../../common/types/interface/request.interface';
 import { Roles } from '../auth/decorator/roles.decorator';
 import { JwtAuthGuard, RolesGuard } from '../auth/guard';
 import { AssignRoleDto } from './dto/assign-role.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
 import { ChangeUserPasswordDto } from './dto/change-user-password.dto';
-import { UserPasswordService } from './services/user-password.service';
-import { UserService } from './services/user.service';
+import { UserPasswordService, UserService } from './services';
 
 @ApiTags('user')
 @Controller('user')

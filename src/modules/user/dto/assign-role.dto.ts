@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Role } from 'src/common/types/enum/role.enum';
+import { Role } from '../../../common/types/enum/role.enum';
 
 export class AssignRoleDto {
   @ApiProperty({ description: 'Username', required: true })

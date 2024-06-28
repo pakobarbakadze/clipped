@@ -1,16 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { AuthorizedRequest } from 'src/common/types/interface/request.interface';
-import { Repository } from 'typeorm';
 import { ChangePasswordDto } from '../dto/change-password.dto';
 import { ChangeUserPasswordDto } from '../dto/change-user-password.dto';
 import { User } from '../entities/user.entity';
+import { UserRepository } from '../user.repository';
 
 @Injectable()
 export class UserPasswordService {
-  constructor(
-    @InjectRepository(User) private readonly userRepository: Repository<User>,
-  ) {}
+  constructor(private readonly userRepository: UserRepository) {}
 
   public async changePassword(
     request: AuthorizedRequest,
