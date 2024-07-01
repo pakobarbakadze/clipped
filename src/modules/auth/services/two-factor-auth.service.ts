@@ -11,7 +11,7 @@ export class TwoFactorAuthService {
   public async enableTwoFactorAuth(user: User): Promise<{ qrCodeUrl: string }> {
     const secret = speakeasy.generateSecret({ length: 20 }).base32;
 
-    await this.userService.update({ id: user.id }, { twoFactorSecret: secret });
+    await this.userService.update(user, { twoFactorSecret: secret });
 
     const qrCodeUrl = await qrcode.toDataURL(
       `otpauth://totp/${user.username}?secret=${secret}&issuer=CMS`,
@@ -27,10 +27,7 @@ export class TwoFactorAuthService {
     const { token } = verifyTwoFactorAuthDto;
 
     const { twoFactorSecret } =
-      (await this.userService.findOne({
-        where: { id: user.id },
-        select: ['twoFactorSecret'],
-      })) || {};
+      (await this.userService.findOne({ id: user.id })) || {};
 
     if (!twoFactorSecret)
       throw new NotFoundException('2FA is not enabled for this user');
@@ -48,7 +45,7 @@ export class TwoFactorAuthService {
   }
 
   public async disableTwoFactorAuth(user: User): Promise<{ message: string }> {
-    await this.userService.update({ id: user.id }, { twoFactorSecret: null });
+    await this.userService.update(user, { twoFactorSecret: null });
 
     return { message: 'Two-factor authentication disabled successfully' };
   }

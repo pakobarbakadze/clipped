@@ -15,16 +15,11 @@ export class UserPasswordService {
   ): Promise<User> {
     const { password } = changePasswordDto;
 
-    const user = await this.userRepository.findOne({
-      where: { id: request.user.id },
-    });
+    const user = await this.userRepository.findOne({ id: request.user.id });
     user.password = password;
     await user.hashPass();
 
-    const savedUser = await this.userRepository.save(user);
-    delete savedUser.password;
-
-    return savedUser;
+    return this.userRepository.save(user);
   }
 
   public async changeUserPassword(
@@ -32,13 +27,9 @@ export class UserPasswordService {
   ): Promise<User> {
     const { username, password } = changeUserPasswordDto;
 
-    const user = await this.userRepository.findOne({
-      where: { username },
-    });
+    const user = await this.userRepository.findOne({ username });
     user.password = password;
     await user.hashPass();
-
-    delete user.password;
 
     return this.userRepository.save(user);
   }

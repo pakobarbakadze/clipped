@@ -29,30 +29,40 @@ export class UserController {
 
   @Get(':username')
   async findOne(@Param('username') username: string): Promise<UserDto> {
-    const user = await this.userService.findOne({ where: { username } });
+    const user = await this.userService.findOne({ username });
     return plainToClass(UserDto, user, { excludeExtraneousValues: true });
   }
 
   @Patch('/role')
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  assignRole(@Body() assingRoleDto: AssignRoleDto) {
-    return this.userService.assignRole(assingRoleDto);
+  async assignRole(@Body() assingRoleDto: AssignRoleDto) {
+    const user = await this.userService.assignRole(assingRoleDto);
+    return plainToClass(UserDto, user, { excludeExtraneousValues: true });
   }
 
   @Patch('/change-password')
   @UseGuards(JwtAuthGuard)
-  changePassword(
+  async changePassword(
     @Req() request: AuthorizedRequest,
     @Body() changePasswordDto: ChangePasswordDto,
   ) {
-    return this.userPasswordService.changePassword(request, changePasswordDto);
+    const user = await this.userPasswordService.changePassword(
+      request,
+      changePasswordDto,
+    );
+    return plainToClass(UserDto, user, { excludeExtraneousValues: true });
   }
 
   @Patch('/change-user-password')
   @Roles(Role.Admin)
   @UseGuards(JwtAuthGuard, RolesGuard)
-  changeUserPassword(@Body() changeUserPasswordDto: ChangeUserPasswordDto) {
-    return this.userPasswordService.changeUserPassword(changeUserPasswordDto);
+  async changeUserPassword(
+    @Body() changeUserPasswordDto: ChangeUserPasswordDto,
+  ) {
+    const user = await this.userPasswordService.changeUserPassword(
+      changeUserPasswordDto,
+    );
+    return plainToClass(UserDto, user, { excludeExtraneousValues: true });
   }
 }

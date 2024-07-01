@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindOneOptions, FindOptionsWhere, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
+import { FindOneParam } from './types/param.types';
 
 @Injectable()
 export class UserRepository {
@@ -17,11 +18,13 @@ export class UserRepository {
     return this.userRepository.save(user);
   }
 
-  public findOne(conditions: FindOneOptions<User>): Promise<User> {
-    return this.userRepository.findOne(conditions);
+  public findOne(findOneParam: FindOneParam): Promise<User> {
+    const { id, username } = findOneParam;
+    const whereCondition = id ? { id } : username ? { username } : {};
+    return this.userRepository.findOne({ where: whereCondition });
   }
 
-  public update(conditions: FindOptionsWhere<User>, values: Partial<User>) {
-    return this.userRepository.update(conditions, values);
+  public update(user: User, values: Partial<User>) {
+    return this.userRepository.update({ id: user.id }, values);
   }
 }

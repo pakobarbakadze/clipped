@@ -3,10 +3,10 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { FindOneOptions, FindOptionsWhere } from 'typeorm';
 import { AssignRoleDto } from '../dto/assign-role.dto';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { User } from '../entities/user.entity';
+import { FindOneParam } from '../types/param.types';
 import { UserRepository } from '../user.repository';
 
 @Injectable()
@@ -24,22 +24,18 @@ export class UserService {
     return this.userRepository.save(user);
   }
 
-  // TODO: change this method to not use repository conditions
-  public async findOne(conditions: FindOneOptions<User>): Promise<User> {
-    return this.userRepository.findOne(conditions);
+  public async findOne(findOneParam: FindOneParam): Promise<User> {
+    return this.userRepository.findOne(findOneParam);
   }
 
-  public async update(
-    conditions: FindOptionsWhere<User>,
-    values: Partial<User>,
-  ) {
-    return this.userRepository.update(conditions, values);
+  public async update(user: User, values: Partial<User>) {
+    return this.userRepository.update(user, values);
   }
 
   public async assignRole(assignRoleDto: AssignRoleDto): Promise<User> {
     const { username, role } = assignRoleDto;
 
-    const user = await this.userRepository.findOne({ where: { username } });
+    const user = await this.userRepository.findOne({ username });
 
     if (!user)
       throw new NotFoundException(`User with username '${username}' not found`);
@@ -50,7 +46,7 @@ export class UserService {
   }
 
   public async validateUser(username: string, password: string): Promise<User> {
-    const user = await this.userRepository.findOne({ where: { username } });
+    const user = await this.userRepository.findOne({ username });
 
     if (!user) throw new UnauthorizedException('Invalid username or password');
 
