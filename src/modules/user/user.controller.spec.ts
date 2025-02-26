@@ -2,7 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { plainToClass } from 'class-transformer';
 import { UserDto } from '../../common/dto/user.dto';
 import { Role } from '../../common/types/enum/role.enum';
+import { AuthorizedRequest } from '../../common/types/interface/request.interface';
 import { AssignRoleDto } from './dto/assign-role.dto';
+import { ChangePasswordDto } from './dto/change-password.dto';
+import { ChangeUserPasswordDto } from './dto/change-user-password.dto';
 import { User } from './entities/user.entity';
 import { UserPasswordService, UserService } from './services';
 import { UserController } from './user.controller';
@@ -79,6 +82,65 @@ describe('UserController', () => {
       const result = await userController.assignRole(assignRoleDto);
 
       expect(userService.assignRole).toHaveBeenCalledWith(assignRoleDto);
+
+      const userDto = plainToClass(UserDto, mockUser, {
+        excludeExtraneousValues: true,
+      });
+
+      expect(result).toEqual(userDto);
+    });
+  });
+
+  describe('changePassword', () => {
+    it('should change the password for a user', async () => {
+      const mockRequest = {
+        user: mockUser,
+      } as AuthorizedRequest;
+
+      const mockChangePasswordDto: ChangePasswordDto = {
+        password: 'newPassword',
+      };
+
+      jest
+        .spyOn(userPasswordService, 'changePassword')
+        .mockResolvedValue(mockUser);
+
+      const result = await userController.changePassword(
+        mockRequest,
+        mockChangePasswordDto,
+      );
+
+      expect(userPasswordService.changePassword).toHaveBeenCalledWith(
+        mockRequest,
+        mockChangePasswordDto,
+      );
+
+      const userDto = plainToClass(UserDto, mockUser, {
+        excludeExtraneousValues: true,
+      });
+
+      expect(result).toEqual(userDto);
+    });
+  });
+
+  describe('changeUserPassword', () => {
+    it('should change the password of a user', async () => {
+      const mockChangeUserPasswordDto: ChangeUserPasswordDto = {
+        username: 'testUser',
+        password: 'newPassword',
+      };
+
+      jest
+        .spyOn(userPasswordService, 'changeUserPassword')
+        .mockResolvedValue(mockUser);
+
+      const result = await userController.changeUserPassword(
+        mockChangeUserPasswordDto,
+      );
+
+      expect(userPasswordService.changeUserPassword).toHaveBeenCalledWith(
+        mockChangeUserPasswordDto,
+      );
 
       const userDto = plainToClass(UserDto, mockUser, {
         excludeExtraneousValues: true,
