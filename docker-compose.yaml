@@ -31,6 +31,16 @@ services:
       - pgdata:/var/lib/postgresql/data
     restart: always
 
+  dynamodb-local:
+    image: amazon/dynamodb-local:latest
+    container_name: dynamodb-local
+    ports:
+      - '8001:8000'
+    command: '-jar DynamoDBLocal.jar -sharedDb -dbPath /home/dynamodblocal'
+    volumes:
+      - dynamodb-data:/home/dynamodblocal
+    working_dir: /home/dynamodblocal
+
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
@@ -64,5 +74,6 @@ services:
 
 volumes:
   pgdata:
+  dynamodb-data:
   prometheus_data:
   grafana_data:

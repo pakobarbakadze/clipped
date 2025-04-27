@@ -1,7 +1,12 @@
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import {
+  GetObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from '@aws-sdk/client-s3';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { LoggerService } from 'src/shared/logger/logger.service';
+import { Readable } from 'stream';
 
 @Injectable()
 export class S3Service {
@@ -31,6 +36,22 @@ export class S3Service {
       );
     } catch (error) {
       this.logger.error(error);
+    }
+  }
+
+  public async getFileStream(key: string): Promise<Readable> {
+    try {
+      const response = await this.s3Client.send(
+        new GetObjectCommand({
+          Bucket: this.configService.get('AWS_BUCKET_NAME'),
+          Key: `videos/${key}`,
+        }),
+      );
+
+      return response.Body as Readable;
+    } catch (error) {
+      this.logger.error(`Error getting file stream for ${key}`, error);
+      throw error;
     }
   }
 }

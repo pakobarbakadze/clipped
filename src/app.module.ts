@@ -6,6 +6,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { FileModule } from './modules/file/file.module';
 import { UserModule } from './modules/user/user.module';
 import { PrometheusModule } from '@willsoto/nestjs-prometheus';
+import { ClipModule } from './modules/clip/clip.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { PrometheusModule } from '@willsoto/nestjs-prometheus';
     AuthModule,
     UserModule,
     FileModule,
+    ClipModule,
   ],
 })
 export class AppModule {}
