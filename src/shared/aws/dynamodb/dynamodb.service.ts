@@ -5,6 +5,7 @@ import {
   GetCommand,
   PutCommand,
   QueryCommand,
+  UpdateCommand,
 } from '@aws-sdk/lib-dynamodb';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -111,6 +112,32 @@ export class DynamoDBService {
         error.stack,
       );
       throw new Error(`Failed to query items from DynamoDB: ${error.message}`);
+    }
+  }
+
+  async updateItem(
+    tableName: string,
+    key: Record<string, any>,
+    updateExpression: string,
+    expressionAttributeNames: Record<string, string>,
+    expressionAttributeValues: Record<string, any>,
+  ) {
+    try {
+      const command = new UpdateCommand({
+        TableName: tableName,
+        Key: key,
+        UpdateExpression: updateExpression,
+        ExpressionAttributeNames: expressionAttributeNames,
+        ExpressionAttributeValues: expressionAttributeValues,
+      });
+
+      return await this.docClient.send(command);
+    } catch (error) {
+      this.logger.error(
+        `Error updating item in DynamoDB: ${error.message}`,
+        error.stack,
+      );
+      throw new Error(`Failed to update item in DynamoDB: ${error.message}`);
     }
   }
 }

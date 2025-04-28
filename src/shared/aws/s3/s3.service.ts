@@ -1,4 +1,5 @@
 import {
+  DeleteObjectCommand,
   GetObjectCommand,
   PutObjectCommand,
   S3Client,
@@ -51,6 +52,21 @@ export class S3Service {
       return response.Body as Readable;
     } catch (error) {
       this.logger.error(`Error getting file stream for ${key}`, error);
+      throw error;
+    }
+  }
+
+  public async deleteFile(key: string): Promise<void> {
+    try {
+      await this.s3Client.send(
+        new DeleteObjectCommand({
+          Bucket: this.configService.get('AWS_BUCKET_NAME'),
+          Key: `videos/${key}`,
+        }),
+      );
+      this.logger.log(`Deleted file: videos/${key}`);
+    } catch (error) {
+      this.logger.error(`Error deleting file ${key}`, error);
       throw error;
     }
   }

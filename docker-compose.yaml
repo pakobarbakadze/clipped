@@ -41,6 +41,16 @@ services:
       - dynamodb-data:/home/dynamodblocal
     working_dir: /home/dynamodblocal
 
+  sqs-local:
+    image: softwaremill/elasticmq:latest
+    container_name: sqs-local
+    ports:
+      - '9324:9324'
+      - '9325:9325'
+    volumes:
+      - ./sqs-config:/opt/elasticmq/config
+    restart: always
+
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
