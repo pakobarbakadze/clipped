@@ -1,14 +1,15 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Get,
   Param,
   Patch,
   Req,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { plainToClass } from 'class-transformer';
 import { UserDto } from '../../common/dto/user.dto';
 import { Role } from '../../common/types/enum/role.enum';
 import { AuthorizedRequest } from '../../common/types/interface/request.interface';
@@ -21,6 +22,7 @@ import { UserPasswordService, UserService } from './services';
 
 @ApiTags('user')
 @Controller('user')
+@UseInterceptors(ClassSerializerInterceptor)
 export class UserController {
   constructor(
     private readonly userService: UserService,
@@ -30,7 +32,7 @@ export class UserController {
   @Get(':username')
   async findOne(@Param('username') username: string): Promise<UserDto> {
     const user = await this.userService.findOne({ username });
-    return plainToClass(UserDto, user, { excludeExtraneousValues: true });
+    return new UserDto(user);
   }
 
   @Patch('/role')
@@ -38,7 +40,7 @@ export class UserController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   async assignRole(@Body() assingRoleDto: AssignRoleDto) {
     const user = await this.userService.assignRole(assingRoleDto);
-    return plainToClass(UserDto, user, { excludeExtraneousValues: true });
+    return new UserDto(user);
   }
 
   @Patch('/change-password')
@@ -51,7 +53,7 @@ export class UserController {
       request,
       changePasswordDto,
     );
-    return plainToClass(UserDto, user, { excludeExtraneousValues: true });
+    return new UserDto(user);
   }
 
   @Patch('/change-user-password')
@@ -63,6 +65,6 @@ export class UserController {
     const user = await this.userPasswordService.changeUserPassword(
       changeUserPasswordDto,
     );
-    return plainToClass(UserDto, user, { excludeExtraneousValues: true });
+    return new UserDto(user);
   }
 }

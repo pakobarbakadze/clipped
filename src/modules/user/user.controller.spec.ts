@@ -20,9 +20,9 @@ describe('UserController', () => {
   const mockUser = {
     id: '1',
     username: 'testUser',
-    password: 'testPassword',
     role: Role.User,
-    twoFactorSecret: 'testSecret',
+    createdAt: new Date(),
+    updatedAt: new Date(),
   } as User;
 
   beforeEach(async () => {

@@ -1,5 +1,6 @@
 import {
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Get,
   Headers,
@@ -8,10 +9,10 @@ import {
   Post,
   Request,
   UseGuards,
+  UseInterceptors,
   UsePipes,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { plainToClass } from 'class-transformer';
 import { UserDto } from 'src/common/dto/user.dto';
 import { User } from '../../user/entities/user.entity';
 import { CurrentUser } from '../decorator/current-user.decorator';
@@ -28,14 +29,15 @@ export class AuthController {
 
   @Post('sign-up')
   @UsePipes(new SignUpValidatorPipe())
+  @UseInterceptors(ClassSerializerInterceptor)
   async signUp(@Body() signUpDto: SignUpDto): Promise<UserDto> {
     const user = await this.authService.signUp(signUpDto);
-    return plainToClass(UserDto, user, { excludeExtraneousValues: true });
+    return new UserDto(user);
   }
 
   @Post('sign-in')
   @UseGuards(LocalAuthGuard)
-  @UsePipes(new SignInValidationPipe())
+  // @UsePipes(new SignInValidationPipe())
   @HttpCode(HttpStatus.OK)
   signIn(@CurrentUser() user: User, @Body() body: SignInDto) {
     return this.authService.signIn(user, body.deviceId);
@@ -52,8 +54,9 @@ export class AuthController {
 
   @Get('profile')
   @UseGuards(JwtAuthGuard)
+  @UseInterceptors(ClassSerializerInterceptor)
   getProfile(@Request() req: any) {
-    return plainToClass(UserDto, req.user, { excludeExtraneousValues: true });
+    return new UserDto(req.user);
   }
 
   @Post('refresh-token')

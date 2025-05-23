@@ -1,5 +1,4 @@
 import * as bcrypt from 'bcrypt';
-import { Exclude } from 'class-transformer';
 import { BeforeInsert, Column, Entity } from 'typeorm';
 import Model from '../../../common/entities/model.entity';
 import { Role } from '../../../common/types/enum/role.enum';
@@ -9,7 +8,6 @@ export class User extends Model {
   @Column({ unique: true })
   username: string;
 
-  @Exclude()
   @Column()
   password: string;
 
@@ -20,7 +18,6 @@ export class User extends Model {
   })
   role: Role;
 
-  @Exclude()
   @Column({ nullable: true })
   twoFactorSecret: string;
 
